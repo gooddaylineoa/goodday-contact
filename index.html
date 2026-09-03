@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Goodday - ติดต่อเรา</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Sarabun', sans-serif; background-color: #F3F4F6; }
+    .theme-pink { background-color: #d81b60; }
+    .theme-text { color: #d81b60; }
+
+    button, .cursor-pointer, [onclick] {
+      transition: transform 0.15s cubic-bezier(.4,0,.2,1), opacity 0.15s ease;
+    }
+    button:active:not(:disabled), .cursor-pointer:active, [onclick]:active {
+      transform: scale(0.95);
+    }
+
+    .page-tab { display: none; }
+    .page-tab.active { display: block; }
+
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+    .faq-answer.open { max-height: 500px; }
+    .faq-chevron { transition: transform 0.3s ease; }
+    .faq-chevron.open { transform: rotate(180deg); }
+  </style>
+</head>
+<body class="antialiased text-gray-800">
+
+  <div class="max-w-md mx-auto bg-white min-h-screen relative shadow-lg">
+
+    <!-- Loading -->
+    <div id="loading-view" class="flex items-center justify-center min-h-screen">
+      <div class="text-center">
+        <div class="w-12 h-12 border-4 border-pink-100 border-t-pink-600 rounded-full animate-spin mx-auto mb-4"></div>
+        <p class="text-gray-400 text-lg font-bold">กำลังโหลดข้อมูล...</p>
+      </div>
+    </div>
+
+    <!-- เนื้อหาหลัก (ซ่อนไว้จนกว่าจะโหลดเสร็จ) -->
+    <div id="main-content" class="hidden">
+
+      <div class="theme-pink text-white p-4 sticky top-0 z-40">
+        <h2 class="text-xl font-black">ติดต่อเรา</h2>
+      </div>
+
+      <!-- แถบสลับ 2 แท็บ -->
+      <div class="flex bg-white border-b border-gray-200 sticky top-[60px] z-30">
+        <button id="tab-btn-about" class="flex-1 py-3 text-lg font-black theme-text border-b-2 border-pink-500">รู้จักพวกเรา</button>
+        <button id="tab-btn-faq" class="flex-1 py-3 text-lg font-black text-gray-400 border-b-2 border-transparent">คำถามที่พบบ่อย</button>
+      </div>
+
+      <!-- แท็บ 1: รู้จักพวกเรา -->
+      <div id="tab-about" class="page-tab active p-4 pb-10">
+        <div class="text-center mb-6">
+          <img id="org-logo" src="" class="w-24 h-24 mx-auto rounded-2xl object-cover shadow-md mb-4">
+          <h1 id="org-name" class="text-2xl font-black theme-text mb-2">-</h1>
+          <p id="org-description" class="text-lg text-gray-600 leading-relaxed"></p>
+        </div>
+
+        <div class="bg-gray-50 rounded-2xl p-4 mb-4 space-y-3">
+          <h3 class="text-lg font-black text-gray-800 mb-2"><i class="fa-solid fa-address-card theme-text mr-2"></i>ช่องทางติดต่อ</h3>
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 bg-white rounded-full flex items-center justify-center text-lg theme-text shadow-sm"><i class="fa-solid fa-phone"></i></div>
+            <div>
+              <p class="text-sm text-gray-400">โทรศัพท์</p>
+              <p id="org-phone" class="text-lg font-bold text-gray-800">-</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 bg-white rounded-full flex items-center justify-center text-lg theme-text shadow-sm"><i class="fa-solid fa-user"></i></div>
+            <div>
+              <p class="text-sm text-gray-400">ผู้ประสานงาน</p>
+              <p id="org-coordinator" class="text-lg font-bold text-gray-800">-</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 bg-white rounded-full flex items-center justify-center text-lg theme-text shadow-sm"><i class="fa-solid fa-envelope"></i></div>
+            <div>
+              <p class="text-sm text-gray-400">อีเมล</p>
+              <p id="org-email" class="text-lg font-bold text-gray-800">-</p>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="text-lg font-black text-gray-800 mb-3">ติดตามเราได้ที่</h3>
+        <div class="grid grid-cols-4 gap-3 mb-8">
+          <a id="social-instagram" href="#" target="_blank" class="hidden bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-2xl aspect-square flex items-center justify-center text-2xl"><i class="fa-brands fa-instagram"></i></a>
+          <a id="social-facebook" href="#" target="_blank" class="hidden bg-blue-600 text-white rounded-2xl aspect-square flex items-center justify-center text-2xl"><i class="fa-brands fa-facebook-f"></i></a>
+          <a id="social-tiktok" href="#" target="_blank" class="hidden bg-gray-900 text-white rounded-2xl aspect-square flex items-center justify-center text-2xl"><i class="fa-brands fa-tiktok"></i></a>
+          <a id="social-youtube" href="#" target="_blank" class="hidden bg-red-600 text-white rounded-2xl aspect-square flex items-center justify-center text-2xl"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+
+        <button id="btn-go-report" class="w-full theme-pink text-white py-4 rounded-2xl font-black text-lg shadow-md">
+          <i class="fa-solid fa-bullhorn mr-2"></i>แจ้งปัญหา / ข้อเสนอแนะ
+        </button>
+      </div>
+
+      <!-- แท็บ 2: คำถามที่พบบ่อย -->
+      <div id="tab-faq" class="page-tab p-4 pb-10">
+        <div id="faq-list" class="space-y-3"></div>
+        <p id="faq-empty" class="hidden text-center text-gray-400 text-lg py-8">ยังไม่มีคำถามที่พบบ่อย</p>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, doc, getDoc, getDocs, collection, orderBy, query } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // 🔴 ใช้ config เดียวกับโปรเจกต์อื่นทั้งหมด (คัดลอกจาก src/firebase.js ของ member-system)
+    const firebaseConfig = {
+      apiKey: "...",
+      authDomain: "...",
+      projectId: "...",
+      storageBucket: "...",
+      messagingSenderId: "...",
+      appId: "..."
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const REPORT_SYSTEM_URL = 'https://goodday-report.vercel.app'; // 🔴 แก้เป็น URL จริง
+
+    async function loadOrgInfo() {
+      const snap = await getDoc(doc(db, 'orgInfo', 'main'));
+      if (!snap.exists()) return;
+      const data = snap.data();
+
+      document.getElementById('org-logo').src = data.logoUrl || '';
+      document.getElementById('org-name').innerText = data.name || 'Goodday';
+      document.getElementById('org-description').innerText = data.description || '';
+      document.getElementById('org-phone').innerText = data.phone || '-';
+      document.getElementById('org-coordinator').innerText = data.coordinatorName || '-';
+      document.getElementById('org-email').innerText = data.email || '-';
+
+      const socials = data.socialLinks || {};
+      ['instagram', 'facebook', 'tiktok', 'youtube'].forEach(key => {
+        const el = document.getElementById(`social-${key}`);
+        if (socials[key]) {
+          el.href = socials[key];
+          el.classList.remove('hidden');
+        }
+      });
+    }
+
+    async function loadFaqs() {
+      const q = query(collection(db, 'faqs'), orderBy('order', 'asc'));
+      const snap = await getDocs(q);
+      const listBox = document.getElementById('faq-list');
+      const emptyBox = document.getElementById('faq-empty');
+
+      if (snap.empty) {
+        emptyBox.classList.remove('hidden');
+        return;
+      }
+
+      const faqs = [];
+      snap.forEach(d => faqs.push(d.data()));
+
+      listBox.innerHTML = faqs.map((f, i) => `
+        <div class="bg-gray-50 rounded-2xl overflow-hidden">
+          <button class="faq-question w-full text-left p-4 flex items-center justify-between gap-3" data-idx="${i}">
+            <span class="text-lg font-bold text-gray-800">${f.question}</span>
+            <i class="fa-solid fa-chevron-down faq-chevron text-gray-400 shrink-0" data-chevron="${i}"></i>
+          </button>
+          <div class="faq-answer px-4" data-answer="${i}">
+            <p class="text-lg text-gray-600 pb-4 leading-relaxed">${f.answer}</p>
+          </div>
+        </div>
+      `).join('');
+
+      document.querySelectorAll('.faq-question').forEach(btn => {
+        btn.onclick = () => {
+          const idx = btn.dataset.idx;
+          const answerBox = document.querySelector(`[data-answer="${idx}"]`);
+          const chevron = document.querySelector(`[data-chevron="${idx}"]`);
+          answerBox.classList.toggle('open');
+          chevron.classList.toggle('open');
+        };
+      });
+    }
+
+    document.getElementById('tab-btn-about').onclick = () => switchTab('about');
+    document.getElementById('tab-btn-faq').onclick = () => switchTab('faq');
+
+    function switchTab(tab) {
+      document.querySelectorAll('.page-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(`tab-${tab}`).classList.add('active');
+
+      document.getElementById('tab-btn-about').className = tab === 'about'
+        ? 'flex-1 py-3 text-lg font-black theme-text border-b-2 border-pink-500'
+        : 'flex-1 py-3 text-lg font-black text-gray-400 border-b-2 border-transparent';
+      document.getElementById('tab-btn-faq').className = tab === 'faq'
+        ? 'flex-1 py-3 text-lg font-black theme-text border-b-2 border-pink-500'
+        : 'flex-1 py-3 text-lg font-black text-gray-400 border-b-2 border-transparent';
+    }
+
+    document.getElementById('btn-go-report').onclick = () => {
+      window.location.href = REPORT_SYSTEM_URL;
+    };
+
+    async function init() {
+      try {
+        await liff.init({ liffId: 'ใส่ LIFF_ID_ใหม่ตรงนี้' }); // 🔴 แก้ทีหลังตอนสมัคร LIFF เสร็จ
+      } catch (e) {
+        console.log('เปิดนอกแอป LINE (ไม่เป็นไร ใช้งานได้ปกติ)');
+      }
+
+      await Promise.all([loadOrgInfo(), loadFaqs()]);
+
+      document.getElementById('loading-view').classList.add('hidden');
+      document.getElementById('main-content').classList.remove('hidden');
+    }
+
+    init();
+  </script>
+</body>
+</html>
